@@ -1,0 +1,298 @@
+{
+  "exclusive": true,
+  "reload_style_on_change": true,
+  "position": "top",
+  "mod": "dock",
+  "passthrough": false,
+  "gtk-layer-shell": true,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+  "margin-bottom": 0,
+  "modules-left": [
+    "group/left1",
+    "group/left2" 
+  ],
+
+  "group/left1": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/omarchy",
+      "custom/separator",
+      "idle_inhibitor",
+      "custom/voxtype",
+      "custom/idle-indicator",
+      "custom/notification-silencing-indicator",
+      "custom/screenrecording-indicator",
+      "custom/update",
+      "custom/updatespacman",
+      "power-profiles-daemon",
+      "backlight",
+      "bluetooth"
+    ]
+  },
+
+  "group/left2": {
+    "orientation": "inherit",
+    "modules": ["mpris"]
+  },
+
+  "modules-center": [
+    "hyprland/workspaces",
+    "memory",
+    "cpu",
+    "battery"
+  ],
+
+  "modules-right": [
+    "custom/keyboard-layout",
+    "custom/separator",
+    "network",
+    "pulseaudio",
+    "custom/separator",
+    /*"custom/weather",*/
+    /*"custom/separator4",*/
+    "custom/clock",
+    "custom/separator2",
+    "tray"
+  ],
+
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "cursor": true,
+    "format": "{icon}",
+    "persistent-workspaces": {
+      "*": 6
+    }
+  },
+
+  "custom/keyboard-layout": {
+    "format": "{}",
+    "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap' | awk '{print $NF}' | sed 's/English//; s/Russian/RU/' | tr -d '()'",
+    "interval": 1,
+    "on-click": "hyprctl switchxkblayout $(hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .name') next",
+    "tooltip": true,
+    "tooltip-format": "Keyboard layout\nLeft click: switch layout\nRight click: show current",
+    "on-click-right": "notify-send 'Current Layout' \"$(hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap' | awk '{print $NF}')\""
+  },
+
+  "custom/separator": {
+    "format": "|", 
+    "tooltip": false
+  },
+
+  "custom/separator2": {
+    "exec": "sh -c 'count=$(busctl --user get-property org.kde.StatusNotifierWatcher /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems | sed -n \"s/^as \\([0-9]\\+\\).*/\\1/p\"); if [ \"${count:-0}\" -gt 0 ]; then echo \"{\\\"text\\\":\\\"|\\\",\\\"class\\\":\\\"show\\\"}\"; else echo \"{\\\"text\\\":\\\"\\\",\\\"class\\\":\\\"hide\\\"}\"; fi'",
+    "return-type": "json",
+    "interval": 2
+  },
+
+  "custom/separator4": {
+    "format": "•", 
+    "tooltip": false
+  },
+
+  "custom/weather": {
+    "format": "{}°",
+    "tooltip": true,
+    "interval": 60,
+    "exec": "curl -s 'wttr.in/Chongqing?format=%t' | sed 's/+//' | tr -d '°C'",
+    "return-type": "json"
+  },
+
+  "custom/omarchy": {
+    "format": "",
+    "on-click": "rofi -show drun",
+    "on-click-right": "alacritty",
+    "tooltip-format": "System menu\n\nSuper + Alt + Space"
+  },
+
+  "custom/update": {
+    "format": "",
+    "exec": "checkupdates 2>/dev/null | wc -l | grep -v '^0$' || echo ''",
+    "on-click": "alacritty -e sudo pacman -Syu",
+    "tooltip-format": "Updates available",
+    "signal": 7,
+    "interval": 21600
+  },
+
+  "custom/voxtype": {
+    "exec": "echo '{\"text\":\"\",\"tooltip\":\"Voice typing disabled\",\"class\":\"idle\"}'",
+    "return-type": "json",
+    "format": "{icon}",
+    "format-icons": {
+      "idle": "",
+      "recording": "󰍬",
+      "transcribing": "󰔟"
+    },
+    "tooltip": true
+  },
+
+  "custom/idle-indicator": {
+    "on-click": "notify-send 'Idle indicator'",
+    "exec": "echo '{\"text\":\"\",\"class\":\"idle\"}'",
+    "signal": 9,
+    "return-type": "json"
+  },
+
+  "custom/notification-silencing-indicator": {
+    "on-click": "notify-send 'Notification silencing'",
+    "exec": "echo '{\"text\":\"\",\"class\":\"idle\"}'",
+    "signal": 10,
+    "return-type": "json"
+  },
+
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "tooltip": true,
+    "format-icons": {
+      "performance": "",
+      "balanced": "󰺢",
+      "power-saver": ""
+    }
+  },
+
+  "cpu": {
+    "interval": 3,
+    "format": " {usage:02}%",
+    "on-click": "alacritty -e btop",
+    "states": {
+      "warning": 50,
+      "critical": 80
+    }
+  },
+
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon}",
+    "tooltip": true,
+    "tooltip-format": "Brightness: {percent}%",
+    "format-alt": "{percent}% {icon}",
+    "format-alt-click": "click-right",
+    "format-icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃞"],
+    "on-scroll-down": "brightnessctl s 5%-",
+    "on-scroll-up": "brightnessctl s +5%"
+  },
+
+  "memory": {
+    "interval": 3,
+    "format": " {used:02.1f}GB",
+    "tooltip-format": "Used {percentage}%\n{used:0.1f}GB/{total:0.1f}GB",
+    "on-click": "alacritty -e btop",
+    "states": {
+      "warning": 50,
+      "critical": 80
+    }
+  },
+
+  "custom/clock": {
+    "exec": "date +'%H:%M'",
+    "interval": 60,
+    "tooltip": false,
+    "on-click-right": "notify-send 'Time' '$(date)'"
+  },
+
+  "network": {
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format": "{icon}",
+    "format-wifi": "{essid} {icon}",
+    "format-ethernet": "{ifname} 󰌗",
+    "format-disconnected": "󰤮",
+    "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Disconnected",
+    "interval": 3,
+    "spacing": 1,
+    "on-click": "nmtui"
+  },
+
+  "battery": {
+    "format": "{capacity}% {icon}",
+    "format-discharging": "{capacity}% {icon}",
+    "format-charging": "{capacity}% {icon}",
+    "format-plugged": "",
+    "format-icons": {
+      "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
+      "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+    "format-full": "{capacity}% 󰂅",
+    "tooltip-format-discharging": "{capacity}%",
+    "tooltip-format-charging": "{capacity}%",
+    "interval": 5,
+    "on-click": "rofi -show power-menu",
+    "states": {
+      "warning": 30,
+      "critical": 15
+    }
+  },
+
+  "bluetooth": {
+    "format": "{num_connections}",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "Devices connected: {num_connections}",
+    "on-click": "bluetoothctl"
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "on-click": "pavucontrol",
+    "on-click-right": "pamixer -t",
+    "tooltip-format": "Volume: {volume}%",
+    "scroll-step": 5,
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "headset": "",
+      "default": ["", "", ""]
+    }
+  },
+
+  "mpris": {
+    "format": " {dynamic}",
+    "format-paused": "{status_icon} {dynamic}",
+    "interval": 1,
+    "dynamic-order": ["artist", "title", "position", "length"],
+    "dynamic-importance-order": ["position", "length", "artist"],
+    "tooltip-format": "{player} ({status}):\n{artist} - {title}",
+    "status-icons": {
+      "paused": "󰝛"
+    },
+    "ignored-players": ["firefox", "brave"]
+  },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "tooltip-format-activated": "Stay Awake: ON",
+    "tooltip-format-deactivated": "Stay Awake: OFF",
+    "format-icons": {
+      "activated": "󱎴",
+      "deactivated": "󰷛"
+    }
+  },
+
+  "custom/updatespacman": {
+    "format": "{}{icon}",
+    "return-type": "json",
+    "format-icons": {
+      "has-updates": "󰏖",
+      "updated": ""
+    },
+    "exec-if": "which checkupdates",
+    "exec": "checkupdates 2>/dev/null | wc -l | awk '{if($1>0) print \"{\\\"text\\\":\\\"\" $1 \"\\\",\\\"class\\\":\\\"has-updates\\\",\\\"tooltip\\\":\\\"\" $1 \" updates available\\\"}\"}'"
+  },
+
+  "tray": {
+    "icon-size": 16,
+    "spacing": 4
+  },
+
+  "custom/screenrecording-indicator": {
+    "on-click": "notify-send 'Screen recording'",
+    "exec": "echo '{\"text\":\"\",\"class\":\"inactive\"}'",
+    "signal": 8,
+    "return-type": "json"
+  }
+}

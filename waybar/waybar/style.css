@@ -1,0 +1,341 @@
+@define-color bg #282828;
+@define-color bg0 #32302f;
+@define-color bg1 #3c3836;
+@define-color fg #ebdbb2;
+@define-color fg0 #fbf1c7;
+@define-color red #cc241d;
+@define-color green #98971a;
+@define-color yellow #d79921;
+@define-color blue #458588;
+@define-color purple #b16286;
+@define-color aqua #689d6a;
+@define-color orange #d65d0e;
+@define-color gray #928374;
+
+/* Global Reset */
+* {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", monospace;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+window#waybar {
+    background-color: transparent;
+}
+
+#waybar > box {
+    margin: 0px 0px;
+    padding: 0px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+window#waybar.empty #mpris {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+/* Group styling */
+#left1 {
+    background-color: @bg;
+    border-radius: 16px;
+    padding: 0px 8px;
+    margin: 8px 6px 4px 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid @bg1;
+}
+
+.modules-center {
+    background-color: @bg;
+    border-radius: 16px;
+    padding: 0px 12px;
+    margin: 8px 6px 4px 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid @bg1;
+}
+
+.modules-right {
+    background-color: @bg;
+    border-radius: 16px;
+    padding: 0px 8px;
+    margin: 8px 8px 4px 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid @bg1;
+}
+
+/* Workspaces */
+#workspaces {
+    background-color: transparent;
+    border: none;
+    padding: 4px 4px;
+    margin: 2px 0px;
+    border-radius: 16px;
+}
+
+#workspaces button {
+    padding: 0px 8px;
+    margin: 0px 3px;
+    color: transparent;
+    border-radius: 12px;
+    background: @gray;
+    transition: all 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+    min-height: 28px;
+}
+
+#workspaces button.active {
+    padding: 0px 28px;
+    background: @fg;
+    color: @bg;
+    min-height: 32px;
+}
+
+#workspaces button.empty {
+    background: @bg1;
+    min-height: 24px;
+}
+
+#workspaces button.empty.active {
+    padding: 0px 24px;
+    background: @fg;
+    color: @bg;
+    min-height: 28px;
+}
+
+#workspaces button:hover {
+    background: @yellow;
+    color: @bg;
+    box-shadow: none;
+    min-height: 32px;
+}
+
+#workspaces button.empty:hover {
+    background: @orange;
+    color: @bg;
+}
+
+/* Common module styling */
+#tray,
+#idle_inhibitor,
+#backlight,
+#bluetooth,
+#pulseaudio,
+#power-profiles-daemon,
+#custom-voxtype,
+#custom-weather,
+#custom-clock,
+#custom-updatespacman,
+#custom-idle-indicator,
+#custom-notification-silencing-indicator,
+#custom-screenrecording-indicator,
+#custom-update,
+#custom-omarchy {
+    min-width: 20px;
+    color: @fg;
+    padding: 0px 10px;
+    margin: 4px 3px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    font-size: 16px;
+    min-height: 28px;
+}
+
+/* Стиль для раскладки клавиатуры в правом блоке */
+#custom-keyboard-layout {
+    background-color: @bg1;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0px 12px;
+    min-width: 45px;
+    color: @fg;
+    border-radius: 12px;
+    margin: 4px 3px;
+    font-size: 16px;
+    min-height: 28px;
+    transition: all 0.25s ease;
+}
+
+#custom-keyboard-layout:hover {
+    background-color: @bg0;
+}
+
+/* Colored modules */
+#battery,
+#memory,
+#cpu,
+#network,
+#pulseaudio {
+    min-width: 20px;
+    background: @bg1;
+    color: @fg;
+    padding: 0px 12px;
+    margin: 4px 3px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    min-height: 28px;
+    font-size: 15px;
+}
+
+/* Specific module tweaks */
+#bluetooth {
+    margin-right: 4px;
+}
+
+#tray {
+    padding-top: 2px;
+}
+
+#custom-omarchy {
+    font-size: 18px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#mpris {
+    background-color: @bg;
+    border-radius: 16px;
+    padding: 0px 12px;
+    margin: 8px 6px 4px 6px;
+    color: @gray;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid @bg1;
+    min-height: 32px;
+    font-size: 15px;
+}
+
+#mpris.playing {
+    color: @fg;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* State-based colors */
+#idle_inhibitor.activated {
+    color: @green;
+}
+
+#battery.charging, #battery.plugged {
+    color: @green;
+}
+
+#battery.warning:not(.charging) {
+    color: @yellow;
+}
+
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 0.5s steps(12) infinite alternate;
+}
+
+#custom-voxtype.recording {
+    color: @red;
+}
+
+#custom-idle-indicator.active,
+#custom-notification-silencing-indicator.active {
+    color: @orange;
+}
+
+#power-profiles-daemon.performance {
+    color: @red;
+}
+
+#power-profiles-daemon.balanced {
+    color: @yellow;
+}
+
+#power-profiles-daemon.power-saver {
+    color: @green;
+}
+
+/* Network states */
+#network.disconnected {
+    color: @red;
+    background: @bg1;
+}
+
+#network.wifi {
+    color: @blue;
+}
+
+#network.ethernet {
+    color: @aqua;
+}
+
+/* PulseAudio states */
+#pulseaudio.muted {
+    color: @gray;
+}
+
+/* Memory & CPU states */
+#memory.warning,
+#cpu.warning {
+    color: @yellow;
+}
+
+#memory.critical,
+#cpu.critical {
+    color: @red;
+}
+
+/* Tooltips */
+tooltip {
+    background: @bg;
+    border: 1px solid @bg1;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+tooltip label {
+    color: @fg;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* Separators */
+#custom-separator, 
+#custom-separator2 {
+    color: @gray;
+    font-size: 13px;
+    padding: 0 5px;
+}
+
+#custom-separator4 {
+    color: @gray;
+    font-size: 17px;
+    padding: 0 3px;
+}
+
+/* Animations */
+@keyframes pulse {
+    from {
+        text-shadow: 0 0 0px @fg;
+    }
+    to {
+        text-shadow: 0 0 5px @fg;
+    }
+}
+
+@keyframes blink {
+    to {
+        color: @bg;
+    }
+}
+
+#custom-screenrecording-indicator.active {
+    color: @red;
+    animation: blink 0.5s linear infinite alternate;
+}
+
+/* Hover effects */
+#battery:hover,
+#memory:hover,
+#cpu:hover,
+#network:hover,
+#pulseaudio:hover {
+    background-color: @bg0;
+}
